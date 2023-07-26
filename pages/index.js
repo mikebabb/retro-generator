@@ -1,71 +1,80 @@
-import { useCallback, useEffect, useState } from 'react'
-import Button from '../components/Button'
-import ClickCount from '../components/ClickCount'
-import styles from '../styles/home.module.css'
+/*
+Create a text area with the following specifications:
+1. a H1 with the text "Retro Template Generator"
+2. a text area for users to enter their desired retro theme
+3. a button for users to submit their requested retro theme, with the text "Generate Retro"
+4. a section to display the generated retro information
+5. a button for users to copy the generated retro information, with the text "Copy to Clipboard"
+6. Get the data from this link: http://localhost:8080/openai/generateinfo
+7. Name the component RetroTemplateGenerator
+*/
 
-function throwError() {
-  console.log(
-    // The function body() is not defined
-    document.body()
-  )
-}
+// Path: pages/index.js
+import { useState } from "react";
+import axios from "axios";
 
-function Home() {
-  const [count, setCount] = useState(0)
-  const increment = useCallback(() => {
-    setCount((v) => v + 1)
-  }, [setCount])
+export default function RetroTemplateGenerator() {
+  const [retroTheme, setRetroTheme] = useState("");
+  const [retroInfo, setRetroInfo] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const r = setInterval(() => {
-      increment()
-    }, 1000)
-
-    return () => {
-      clearInterval(r)
+  const handleGenerateRetroInfo = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/openai/generateinfo",
+        {
+          retroTheme,
+        }
+      );
+      setRetroInfo(response.data.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
     }
-  }, [increment])
+  };
+
+  const handleCopyToClipboard = () => {
+    navigator.clipboard.writeText(retroInfo);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleGenerateRetroInfo();
+  };
 
   return (
-    <main className={styles.main}>
-      <h1>Fast Refresh Demo</h1>
-      <p>
-        Fast Refresh is a Next.js feature that gives you instantaneous feedback
-        on edits made to your React components, without ever losing component
-        state.
-      </p>
-      <hr className={styles.hr} />
-      <div>
-        <p>
-          Auto incrementing value. The counter won't reset after edits or if
-          there are errors.
-        </p>
-        <p>Current value: {count}</p>
-      </div>
-      <hr className={styles.hr} />
-      <div>
-        <p>Component with state.</p>
-        <ClickCount />
-      </div>
-      <hr className={styles.hr} />
-      <div>
-        <p>
-          The button below will throw 2 errors. You'll see the error overlay to
-          let you know about the errors but it won't break the page or reset
-          your state.
-        </p>
-        <Button
-          onClick={(e) => {
-            setTimeout(() => document.parentNode(), 0)
-            throwError()
-          }}
-        >
-          Throw an Error
-        </Button>
-      </div>
-      <hr className={styles.hr} />
-    </main>
-  )
-}
+    <div>
+      <h1>Retro Template Generator</h1>
+      {/* form for user to input their retro theme, with a "generate" button */}
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="retroTheme">Retro Theme</label>
+        <input
+          type="text"
+          id="retroTheme"
+          value={retroTheme}
+          onChange={(e) => setRetroTheme(e.target.value)}
+          disabled={loading}
+        />
+      </form>
+      <button type="submit" disabled={loading} onClick={handleSubmit}>
+        ✨ Generate Retro
+      </button>
 
-export default Home
+      <section>
+        {loading && <p>Generating your retro - please wait ⏳</p>}
+        {!loading && retroInfo && (
+          <>
+            <h2>Your Generated Retro</h2>
+            <p>{retroInfo}</p>
+            <button onClick={handleCopyToClipboard}>
+              📋 Copy to Clipboard
+            </button>
+            <button onClick={() => setRetroInfo("")}>🚮 Reset</button>
+          </>
+        )}
+      </section>
+    </div>
+  );
+}
