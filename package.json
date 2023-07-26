@@ -1,9 +1,11 @@
 {
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "devserver": "nodemon pages/api/server.js"
   },
   "dependencies": {
     "@material-ui/core": "^4.12.4",
