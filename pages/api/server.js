@@ -9,8 +9,8 @@ Create a server with the following specifications:
 */
 
 // Path: pages/api/server.js
-import express from "express";
-import dotenv from "dotenv";
+const express = require("express");
+const dotenv = require("dotenv");
 
 dotenv.config();
 
@@ -19,6 +19,8 @@ const app = express();
 const port = process.env.PORT || 8080;
 
 app.use(express.json());
+
+app.use("/openai", require("./router"));
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);

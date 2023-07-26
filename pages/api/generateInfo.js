@@ -12,7 +12,7 @@ Create a controller with the following specifications:
 
 // Path: pages/api/generateInfo.js
 
-import { Configuration, OpenAIApi } from "openai";
+const { Configuration, OpenAIApi } = require("openai");
 const { retroPrompt } = require("../../data/prompt.json");
 
 const configuration = new Configuration({
@@ -22,7 +22,7 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-export async function generateInfo(req, res) {
+async function generateInfo(req, res) {
   const { retroTheme } = req.body;
 
   try {
@@ -52,4 +52,4 @@ export async function generateInfo(req, res) {
   }
 }
 
-export default generateInfo;
+module.exports = { generateInfo };
