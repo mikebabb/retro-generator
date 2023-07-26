@@ -12,6 +12,16 @@ Create a text area with the following specifications:
 // Path: pages/index.js
 import { useState } from "react";
 import axios from "axios";
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Paper,
+  AppBar,
+} from "@material-ui/core";
+// import deleteicon from material ui
+import DeleteIcon from "@material-ui/icons/Delete";
 
 export default function RetroTemplateGenerator() {
   const [retroTheme, setRetroTheme] = useState("");
@@ -45,36 +55,72 @@ export default function RetroTemplateGenerator() {
   };
 
   return (
-    <div>
-      <h1>Retro Template Generator</h1>
-      {/* form for user to input their retro theme, with a "generate" button */}
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="retroTheme">Retro Theme</label>
-        <input
-          type="text"
-          id="retroTheme"
-          value={retroTheme}
-          onChange={(e) => setRetroTheme(e.target.value)}
+    <>
+      <AppBar
+        position="static"
+        style={{ marginBottom: "1rem", padding: "1rem 2rem" }}
+      >
+        <Typography variant="h5">🤖 AI Retro Generator</Typography>
+      </AppBar>
+      <Container maxWidth="sm">
+        <h1>Retro Template Generator</h1>
+        <p>
+          Enter a theme in the field below to generate an exciting retro
+          template for your team using the power of AI ✨
+        </p>
+        <div style={{ marginBottom: "1rem" }}>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              id="retroTheme"
+              label="Retro Theme"
+              value={retroTheme}
+              onChange={(e) => setRetroTheme(e.target.value)}
+              disabled={loading}
+              style={{ width: "100%" }}
+            />
+          </form>
+        </div>
+        <Button
+          type="submit"
           disabled={loading}
-        />
-      </form>
-      <button type="submit" disabled={loading} onClick={handleSubmit}>
-        ✨ Generate Retro
-      </button>
+          onClick={handleSubmit}
+          variant="contained"
+          color="primary"
+        >
+          Generate Retro
+        </Button>
 
-      <section>
-        {loading && <p>Generating your retro - please wait ⏳</p>}
-        {!loading && retroInfo && (
-          <>
-            <h2>Your Generated Retro</h2>
-            <p>{retroInfo}</p>
-            <button onClick={handleCopyToClipboard}>
-              📋 Copy to Clipboard
-            </button>
-            <button onClick={() => setRetroInfo("")}>🚮 Reset</button>
-          </>
-        )}
-      </section>
-    </div>
+        <section>
+          {loading && (
+            <p>Generating your wonderfully whimsical retro - please wait ⏳</p>
+          )}
+          {!loading && retroInfo && (
+            <>
+              <h2>Your Generated Retro</h2>
+              <Paper
+                elevation={3}
+                style={{ marginBottom: "1rem", padding: "1rem" }}
+              >
+                <Typography>{retroInfo}</Typography>
+              </Paper>
+              <Button
+                onClick={handleCopyToClipboard}
+                variant="contained"
+                style={{ marginRight: "1rem" }}
+              >
+                Copy to Clipboard
+              </Button>
+              <Button
+                onClick={() => setRetroInfo("")}
+                variant="outlined"
+                startIcon={<DeleteIcon />}
+              >
+                Reset
+              </Button>
+            </>
+          )}
+        </section>
+      </Container>
+    </>
   );
 }
