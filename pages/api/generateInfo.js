@@ -13,9 +13,7 @@ Create a controller with the following specifications:
 // Path: pages/api/generateInfo.js
 
 import { Configuration, OpenAIApi } from "openai";
-import dotenv from "dotenv";
-
-dotenv.config();
+const { retroPrompt } = require("../../data/prompt.json");
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -25,22 +23,32 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 export async function generateInfo(req, res) {
-  try {
-    const response = await openai.completions.create({
-      engine: "davinci",
-      prompt: req.body.prompt,
-      maxTokens: 100,
-      temperature: 0.9,
-      topP: 1,
-      n: 1,
-      stream: false,
-      logprobs: null,
-      stop: ["\n"],
-    });
+  const { retroTheme } = req.body;
 
-    res.status(200).json(response);
+  try {
+    const completion = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: `${retroPrompt}${retroTheme}` }],
+      max_tokens: 200,
+      temperature: 0,
+      n: 1,
+    });
+    const response = completion.data.choices[0].message.content;
+
+    return res.status(200).json({
+      success: true,
+      data: response,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    if (error.response.status === 401) {
+      return res.status(401).json({
+        error: "Please provide a valid API key.",
+      });
+    }
+    return res.status(500).json({
+      error:
+        "An error occurred while generating retro information. Please try again later.",
+    });
   }
 }
 
