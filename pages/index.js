@@ -17,11 +17,10 @@ import {
   TextField,
   Button,
   Typography,
-  Paper,
   AppBar,
 } from "@material-ui/core";
-// import deleteicon from material ui
 import DeleteIcon from "@material-ui/icons/Delete";
+import RetroInfo from "../components/RetroInfo";
 
 export default function RetroTemplateGenerator() {
   const [retroTheme, setRetroTheme] = useState("");
@@ -97,12 +96,7 @@ export default function RetroTemplateGenerator() {
           {!loading && retroInfo && (
             <>
               <h2>Your Generated Retro</h2>
-              <Paper
-                elevation={3}
-                style={{ marginBottom: "1rem", padding: "1rem" }}
-              >
-                <Typography>{retroInfo}</Typography>
-              </Paper>
+              <RetroInfo data={retroInfo} />
               <Button
                 onClick={handleCopyToClipboard}
                 variant="contained"
