@@ -59,14 +59,22 @@ export default function RetroTemplateGenerator() {
         position="static"
         style={{ marginBottom: "1rem", padding: "1rem 2rem" }}
       >
-        <Typography variant="h5">🤖 AI Retro Generator</Typography>
+        <Typography component={"h1"} variant="h5">
+          🤖 AI Retro Generator
+        </Typography>
       </AppBar>
       <Container maxWidth="sm">
-        <h1>Retro Template Generator</h1>
-        <p>
+        <Typography component={"h2"} variant="h4" style={{ margin: "2rem 0" }}>
+          Retro Template Generator
+        </Typography>
+        <Typography
+          component="p"
+          variant="body"
+          style={{ marginBottom: "1.5rem" }}
+        >
           Enter a theme in the field below to generate an exciting retro
           template for your team using the power of AI ✨
-        </p>
+        </Typography>
         <div style={{ marginBottom: "1rem" }}>
           <form onSubmit={handleSubmit}>
             <TextField
@@ -95,7 +103,13 @@ export default function RetroTemplateGenerator() {
           )}
           {!loading && retroInfo && (
             <>
-              <h2>Your Generated Retro</h2>
+              <Typography
+                component={"h3"}
+                variant="h5"
+                style={{ margin: "2rem 0" }}
+              >
+                Your Generated Retro
+              </Typography>
               <RetroInfo data={retroInfo} />
               <Button
                 onClick={handleCopyToClipboard}
